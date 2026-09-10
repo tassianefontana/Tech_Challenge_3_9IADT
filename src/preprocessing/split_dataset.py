@@ -18,11 +18,13 @@ from src.config import (
     INSTRUCTION_TEMPLATE,
     PROCESSED_FILE,
     RANDOM_SEED,
+    RATIONALE_PREFIX,
     SPLIT_RATIOS,
     SYSTEM_PROMPT,
     TEST_FILE,
     TRAIN_FILE,
     VAL_FILE,
+    VERDICT_PREFIX,
 )
 
 
@@ -31,7 +33,10 @@ def to_chat(record: dict) -> dict:
     user = INSTRUCTION_TEMPLATE.format(
         question=record["question"], context=record["context"]
     )
-    assistant = f"Veredito: {record['label']}\nJustificativa: {record['answer']}"
+    assistant = (
+        f"{VERDICT_PREFIX} {record['label']}\n"
+        f"{RATIONALE_PREFIX} {record['answer']}"
+    )
 
     return {
         "id": record["id"],

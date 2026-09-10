@@ -25,7 +25,7 @@ DOCS_DIR = BASE_DIR / "docs"
 VECTORDB_DIR = BASE_DIR / "chromadb"
 VECTORDB_COLLECTION = "pubmedqa"
 
-for _d in (RAW_DIR, PROCESSED_DIR, TRAINING_DIR, MODELS_DIR, LOGS_DIR):
+for _d in (RAW_DIR, PROCESSED_DIR, TRAINING_DIR, MODELS_DIR, LOGS_DIR, DOCS_DIR):
     _d.mkdir(parents=True, exist_ok=True)
 
 # --------------------------------------------------------------------
@@ -65,6 +65,60 @@ ADAPTER_DIR = MODELS_DIR / "qwen2.5-1.5b-pubmedqa-lora"
 RETRIEVER_TOP_K = 3
 
 # --------------------------------------------------------------------
+# Fine-tuning (QLoRA) - Etapa 3
+# --------------------------------------------------------------------
+LORA_CONFIG = {
+    "r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "bias": "none",
+    "task_type": "CAUSAL_LM",
+    # Modulos de atencao + MLP do Qwen2.5. Ajustar se trocar o modelo base.
+    "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj",
+    ],
+}
+
+TRAINING_ARGS = {
+    "num_train_epochs": 3,
+    "per_device_train_batch_size": 2,
+    "gradient_accumulation_steps": 8,  # batch efetivo = 16
+    "learning_rate": 2e-4,
+    "lr_scheduler_type": "cosine",
+    "warmup_ratio": 0.03,
+    "weight_decay": 0.01,
+    "logging_steps": 10,
+    "eval_strategy": "epoch",
+    "save_strategy": "epoch",
+    "save_total_limit": 2,
+    "optim": "paged_adamw_8bit",
+    "max_grad_norm": 0.3,
+    "seed": RANDOM_SEED,
+    "report_to": "none",
+}
+
+MAX_SEQ_LENGTH = 2048
+
+# --------------------------------------------------------------------
+# Geracao / avaliacao
+# --------------------------------------------------------------------
+GENERATION_ARGS = {
+    "max_new_tokens": 160,
+    "do_sample": False,
+    "temperature": None,
+    "top_p": None,
+    "repetition_penalty": 1.05,
+}
+
+EVAL_RESULTS_FILE = DOCS_DIR / "evaluation_results.json"
+
+# --------------------------------------------------------------------
 # Prompt de instrucao usado no fine-tuning e na inferencia
 # --------------------------------------------------------------------
 SYSTEM_PROMPT = (
@@ -79,3 +133,7 @@ INSTRUCTION_TEMPLATE = (
     "Evidencia cientifica:\n{context}\n\n"
     "Responda com um veredito (yes/no/maybe) e uma justificativa."
 )
+
+# Prefixos da resposta estruturada. Usados no treino e no parser da avaliacao.
+VERDICT_PREFIX = "Veredito:"
+RATIONALE_PREFIX = "Justificativa:"
