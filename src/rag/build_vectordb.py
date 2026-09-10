@@ -1,3 +1,5 @@
+"""Construcao do banco vetorial (Chroma) a partir do dataset curado."""
+
 import json
 
 from langchain_core.documents import Document

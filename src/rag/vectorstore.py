@@ -1,5 +1,4 @@
-"""Acesso unico ao banco vetorial e ao modelo de embeddings.
-"""
+"""Acesso unico ao banco vetorial e ao modelo de embeddings."""
 
 from functools import lru_cache
 

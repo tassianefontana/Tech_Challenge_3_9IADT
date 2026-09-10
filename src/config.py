@@ -1,3 +1,5 @@
+"""Configuracao central do projeto: paths, modelos e hiperparametros."""
+
 from pathlib import Path
 
 # --------------------------------------------------------------------
@@ -80,7 +82,7 @@ LORA_CONFIG = {
 TRAINING_ARGS = {
     "num_train_epochs": 3,
     "per_device_train_batch_size": 2,
-    "gradient_accumulation_steps": 8,  
+    "gradient_accumulation_steps": 8,
     "learning_rate": 2e-4,
     "lr_scheduler_type": "cosine",
     "warmup_ratio": 0.03,
