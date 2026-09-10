@@ -1,8 +1,4 @@
-"""Download do dataset PubMedQA (subset PQA-L rotulado por especialistas).
-
-Uso:
-    python -m src.preprocessing.download_dataset
-"""
+"""Download do dataset PubMedQA (subset PQA-L, rotulado por especialistas)."""
 
 import sys
 import urllib.request

@@ -1,10 +1,3 @@
-"""Configuracao central do projeto.
-
-Todos os modulos devem importar caminhos e constantes daqui, evitando
-paths hardcoded divergentes entre scripts (problema que causava o
-vectorstore ser gravado em `./chromadb` e lido de `./vectordb`).
-"""
-
 from pathlib import Path
 
 # --------------------------------------------------------------------
@@ -21,7 +14,7 @@ MODELS_DIR = BASE_DIR / "models"
 LOGS_DIR = BASE_DIR / "logs"
 DOCS_DIR = BASE_DIR / "docs"
 
-# Diretorio unico do banco vetorial (fonte da verdade)
+# Diretorio do banco vetorial
 VECTORDB_DIR = BASE_DIR / "chromadb"
 VECTORDB_COLLECTION = "pubmedqa"
 
@@ -65,7 +58,7 @@ ADAPTER_DIR = MODELS_DIR / "qwen2.5-1.5b-pubmedqa-lora"
 RETRIEVER_TOP_K = 3
 
 # --------------------------------------------------------------------
-# Fine-tuning (QLoRA) - Etapa 3
+# Fine-tuning (QLoRA)
 # --------------------------------------------------------------------
 LORA_CONFIG = {
     "r": 16,
@@ -73,7 +66,6 @@ LORA_CONFIG = {
     "lora_dropout": 0.05,
     "bias": "none",
     "task_type": "CAUSAL_LM",
-    # Modulos de atencao + MLP do Qwen2.5. Ajustar se trocar o modelo base.
     "target_modules": [
         "q_proj",
         "k_proj",
@@ -88,7 +80,7 @@ LORA_CONFIG = {
 TRAINING_ARGS = {
     "num_train_epochs": 3,
     "per_device_train_batch_size": 2,
-    "gradient_accumulation_steps": 8,  # batch efetivo = 16
+    "gradient_accumulation_steps": 8,  
     "learning_rate": 2e-4,
     "lr_scheduler_type": "cosine",
     "warmup_ratio": 0.03,

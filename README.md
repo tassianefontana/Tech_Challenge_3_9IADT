@@ -1,0 +1,159 @@
+# Assistente Médico com LLM Fine-tunada — Tech Challenge Fase 3
+
+Assistente virtual de apoio à decisão clínica construído sobre uma LLM
+fine-tunada com QLoRA no dataset **PubMedQA**, orquestrado com **LangChain**
+e **LangGraph**, com camada de segurança, auditoria e explainability.
+
+> ⚠️ **Aviso**: sistema acadêmico de apoio à decisão. Não substitui julgamento
+> clínico e nunca emite prescrições sem validação humana.
+
+---
+
+## Arquitetura
+
+```
+data/raw/          PubMedQA bruto (não versionado, baixado por script)
+data/processed/    dataset curado + estatísticas de preprocessing
+data/training/     train/val/test em JSONL (formato de chat)
+src/config.py      configuração central (paths, modelos, hiperparâmetros)
+src/preprocessing/ download, anonimização, curadoria e split
+src/finetuning/    treino QLoRA e avaliação base vs fine-tuned
+src/rag/           banco vetorial Chroma e retriever
+src/app/           pipeline LangChain
+src/workflow/      fluxo LangGraph
+src/security/      guardrails e logging de auditoria
+notebooks/         notebook de fine-tuning no Google Colab
+docs/              relatório técnico e resultados de avaliação
+```
+
+---
+
+## Instalação
+
+Requer **Python 3.11** (não use 3.13+: `torch` e `bitsandbytes` ainda não têm
+wheels estáveis).
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+Linux/macOS: `source .venv/bin/activate`
+
+---
+
+## Etapa 1 — Preparação dos dados
+
+```bash
+python -m src.preprocessing.download_dataset
+python -m src.preprocessing.build_dataset
+python -m src.preprocessing.split_dataset
+```
+
+| Comando | Saída |
+|---|---|
+| `download_dataset` | `data/raw/ori_pqal.json` (idempotente; use `--force` para rebaixar) |
+| `build_dataset` | `data/processed/pubmedqa_processed.json` + `preprocessing_stats.json` |
+| `split_dataset` | `data/training/{train,val,test}.jsonl` |
+
+O `build_dataset` aplica, nesta ordem: normalização Unicode NFKC → remoção de
+caracteres de controle → **anonimização** (e-mail, URL, CPF, CNS, telefone,
+MRN/prontuário, datas, nomes com título clínico, idade ≥ 90 conforme HIPAA
+Safe Harbor) → curadoria por tamanho e validade do rótulo → deduplicação
+por SHA-256.
+
+O split é **estratificado por rótulo**, com seed fixa (`RANDOM_SEED = 42`),
+preservando a distribuição `yes`/`no`/`maybe` nos três conjuntos.
+
+**Resultado:** 1000 exemplos curados (yes 552 / no 338 / maybe 110),
+divididos em 799 treino / 99 validação / 102 teste.
+
+---
+
+## Etapa 2 — Fine-tuning (QLoRA)
+
+O treino exige GPU NVIDIA. **Sem GPU local, use o Google Colab:**
+
+1. Faça push deste repositório para o GitHub.
+2. Abra `notebooks/finetuning_colab.ipynb` no Colab.
+3. `Ambiente de execução > Alterar o tipo > GPU (T4)`.
+4. Cadastre a URL do repositório em `Secrets` (ícone de chave) com o nome
+   `REPO_URL`.
+5. Execute todas as células e baixe o `adapter.zip` ao final.
+6. Descompacte em `models/`.
+
+Com GPU local, o mesmo pipeline roda via CLI:
+
+```bash
+python -m src.finetuning.train
+python -m src.finetuning.train --epochs 2 --max-seq-length 1024   # se houver OOM
+```
+
+| Parâmetro | Valor |
+|---|---|
+| Modelo base | `Qwen/Qwen2.5-1.5B-Instruct` |
+| Quantização | NF4 4-bit com double quantization |
+| LoRA | r=16, alpha=32, dropout=0.05, em atenção + MLP |
+| Batch efetivo | 16 (batch 2 × grad. accumulation 8) |
+| Otimizador | `paged_adamw_8bit`, LR 2e-4, scheduler cosine |
+| Épocas | 3 |
+
+A loss é calculada **apenas nos tokens da resposta** (`assistant_only_loss`);
+caso contrário o modelo aprenderia a reproduzir o abstract em vez de decidir
+o veredito.
+
+---
+
+## Etapa 3 — Avaliação
+
+```bash
+python -m src.finetuning.evaluate                 # base + fine-tuned
+python -m src.finetuning.evaluate --only base
+python -m src.finetuning.evaluate --limit 30      # smoke test
+```
+
+Resultados em `docs/evaluation_results.json`.
+
+**F1 macro é a métrica principal**, não a acurácia: o dataset é desbalanceado
+(55% `yes`), então um modelo que sempre responde "yes" atinge 55% de acurácia
+com F1 macro de apenas ~0.24. Também reportamos ROUGE-L da justificativa e a
+taxa de respostas sem veredito parseável.
+
+---
+
+## Etapa 4 — Banco vetorial (RAG)
+
+```bash
+python -m src.rag.build_vectordb
+python -m src.rag.test_retrieval "Does early mobilization reduce ICU stay?"
+```
+
+Chroma + embeddings `all-MiniLM-L6-v2`, persistido em `chromadb/`
+(regenerável; não versionado). Cada documento carrega o PMID em metadata,
+que é devolvido junto à resposta para garantir **explainability**.
+
+---
+
+## Utilitários
+
+```bash
+python tools/make_notebook.py    # regenera o notebook do Colab
+```
+
+---
+
+## Segurança e conformidade
+
+- Anonimização aplicada antes de qualquer treino ou indexação.
+- Guardrails bloqueiam prescrição direta de medicamento ou dosagem.
+- Toda interação é registrada em `logs/audit.log` (não versionado).
+- Respostas sempre acompanhadas da fonte (PMID) utilizada.
+
+---
+
+## Documentação
+
+- `docs/relatorio_tecnico.md` — relatório técnico completo
+- `docs/evaluation_results.json` — métricas da avaliação
+- `data/processed/preprocessing_stats.json` — estatísticas de curadoria

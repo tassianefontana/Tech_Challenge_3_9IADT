@@ -1,11 +1,7 @@
 """Etapa 2 - Split estratificado train/val/test em formato de chat (JSONL).
 
-O formato de saida ja e o esperado pelo `SFTTrainer` (trl) no Colab:
-    {"messages": [{"role": "system"...}, {"role": "user"...},
-                  {"role": "assistant"...}], "label": "yes", "id": "..."}
-
-Uso:
-    python -m src.preprocessing.split_dataset
+O formato de saida e o consumido diretamente pelo SFTTrainer (trl):
+    {"id": ..., "label": ..., "messages": [system, user, assistant]}
 """
 
 import json

@@ -1,7 +1,4 @@
 """Acesso unico ao banco vetorial e ao modelo de embeddings.
-
-Centralizar aqui evita instanciar o Chroma com paths/collections
-divergentes em cada script.
 """
 
 from functools import lru_cache

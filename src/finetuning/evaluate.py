@@ -5,11 +5,6 @@ Metricas:
     principal porque o dataset e desbalanceado (apenas ~11% de `maybe`).
   - ROUGE-L da justificativa em relacao a conclusao de referencia.
   - Taxa de respostas mal formatadas (sem veredito parseavel).
-
-Uso:
-    python -m src.finetuning.evaluate                  # base + fine-tuned
-    python -m src.finetuning.evaluate --only base
-    python -m src.finetuning.evaluate --limit 30       # smoke test rapido
 """
 
 import argparse

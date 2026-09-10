@@ -3,11 +3,6 @@
 Requisito explicito do Tech Challenge Fase 3: "Preparar os dados com
 tecnicas de preprocessing, anonimizacao e curadoria."
 
-Embora o PubMedQA seja um corpus publico de abstracts (ja sem PII de
-pacientes), aplicamos a mesma camada que seria usada sobre prontuarios
-internos do hospital. Isso garante que, ao trocar a fonte de dados por
-documentos reais, o pipeline continue conforme LGPD/HIPAA.
-
 Estrategia: substituicao por placeholders tipados (pseudonimizacao),
 preservando a semantica clinica do texto para o modelo.
 """
@@ -70,7 +65,6 @@ def anonymize(text: str) -> Tuple[str, Dict[str, int]]:
 
 
 def contains_pii(text: str) -> bool:
-    """Checagem rapida usada pelos guardrails de entrada (Etapa 6)."""
     if any(p.search(text) for p in PATTERNS.values()):
         return True
     return bool(_AGE_90_PLUS.search(text))

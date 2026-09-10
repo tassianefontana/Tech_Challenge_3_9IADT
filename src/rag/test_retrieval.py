@@ -1,8 +1,4 @@
-"""Teste rapido de recuperacao no banco vetorial.
-
-Uso:
-    python -m src.rag.test_retrieval "sua pergunta clinica"
-"""
+"""Teste rapido de recuperacao no banco vetorial."""
 
 import sys
 

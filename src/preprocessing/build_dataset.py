@@ -1,11 +1,8 @@
 """Etapa 2 - Pipeline de preprocessing, anonimizacao e curadoria.
 
-Le o PubMedQA bruto (ori_pqal.json) e produz um dataset curado em
+Le o PubMedQA ori_pqal.json e produz um dataset curado em
 data/processed/pubmedqa_processed.json, junto com um relatorio de
 estatisticas usado no relatorio tecnico.
-
-Uso:
-    python -m src.preprocessing.build_dataset
 """
 
 import hashlib
@@ -42,10 +39,6 @@ def clean_text(text: str) -> str:
 
 def build_context(item: dict) -> str:
     """Concatena os contextos preservando os rotulos de secao do abstract.
-
-    O PubMedQA traz CONTEXTS (lista de paragrafos) e LABELS (BACKGROUND,
-    METHODS, RESULTS...). Manter os rotulos ajuda o modelo a distinguir
-    metodologia de conclusao.
     """
     contexts = item.get("CONTEXTS") or []
     labels = (item.get("LABELS") or [])[: len(contexts)]

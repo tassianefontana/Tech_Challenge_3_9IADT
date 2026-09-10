@@ -1,7 +1,4 @@
-"""Gera notebooks/finetuning_colab.ipynb a partir de celulas em texto.
-
-Uso: python tools/make_notebook.py
-"""
+"""Gera notebooks/finetuning_colab.ipynb a partir de celulas em texto."""
 
 import json
 from pathlib import Path
@@ -42,12 +39,24 @@ code("!nvidia-smi")
 md("""
 ## 2. Clonar o repositorio
 
-Substitua a URL pelo seu repositorio no GitHub.
+A URL e lida da variavel de ambiente `REPO_URL`. Defina-a na celula abaixo
+ou via `Secrets` do Colab (icone de chave na barra lateral).
 """)
 code("""
-REPO_URL = "https://github.com/SEU_USUARIO/SEU_REPO.git"
-
 import os
+
+REPO_URL = os.environ.get("REPO_URL", "")
+
+if not REPO_URL:
+    try:
+        from google.colab import userdata
+        REPO_URL = userdata.get("REPO_URL")
+    except Exception:
+        raise SystemExit(
+            "Defina REPO_URL nos Secrets do Colab ou com "
+            "os.environ['REPO_URL'] = '...' antes de rodar esta celula."
+        )
+
 if not os.path.exists("/content/techchallenge3"):
     !git clone $REPO_URL /content/techchallenge3
 
@@ -278,9 +287,9 @@ code("""
 # from huggingface_hub import notebook_login
 # notebook_login()
 #
-# from peft import PeftModel
-# model.push_to_hub("SEU_USUARIO/qwen2.5-1.5b-pubmedqa-lora")
-# tok.push_to_hub("SEU_USUARIO/qwen2.5-1.5b-pubmedqa-lora")
+# repo_id = os.environ["HF_REPO_ID"]
+# model.push_to_hub(repo_id)
+# tok.push_to_hub(repo_id)
 """)
 
 md("""

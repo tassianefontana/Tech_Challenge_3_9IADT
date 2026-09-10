@@ -1,13 +1,9 @@
 """Etapa 3 - Fine-tuning QLoRA do assistente medico.
 
 Carrega o modelo base em 4-bit (NF4) e treina apenas adaptadores LoRA,
-o que permite rodar em uma GPU T4 de 16 GB (Google Colab gratuito).
+o que permite rodar em uma GPU T4 de 16 GB.
 
-Uso (Colab ou maquina com GPU NVIDIA):
-    python -m src.finetuning.train
-    python -m src.finetuning.train --epochs 2 --model Qwen/Qwen2.5-0.5B-Instruct
-
-Em CPU o treino nao e viavel; o script aborta com mensagem explicita.
+Requer CUDA; em CPU o script aborta com mensagem explicita.
 """
 
 import argparse
@@ -35,11 +31,6 @@ from src.config import (
 
 
 def load_jsonl_dataset(path) -> Dataset:
-    """Carrega o JSONL gerado na Etapa 2 mantendo apenas o campo `messages`.
-
-    O SFTTrainer detecta o formato conversacional e aplica o chat template
-    do tokenizer automaticamente.
-    """
     rows = []
     with open(path, "r", encoding="utf-8") as f:
         for line in f:

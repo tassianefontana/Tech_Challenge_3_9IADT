@@ -1,12 +1,3 @@
-"""Construcao do banco vetorial (Chroma) a partir do dataset curado.
-
-Usa o diretorio unico definido em src/config.py (VECTORDB_DIR), eliminando
-a divergencia anterior entre `./chromadb` (escrita) e `./vectordb` (leitura).
-
-Uso:
-    python -m src.rag.build_vectordb
-"""
-
 import json
 
 from langchain_core.documents import Document
