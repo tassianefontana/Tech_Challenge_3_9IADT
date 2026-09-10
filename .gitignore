@@ -1,0 +1,38 @@
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Dados brutos (baixados via script, nao versionar)
+data/raw/
+
+# Bancos vetoriais (regenerados via src/rag/build_vectordb.py)
+chromadb/
+vectordb/
+
+# Pesos de modelos e checkpoints
+models/
+outputs/
+*.bin
+*.safetensors
+*.gguf
+
+# Logs de auditoria
+logs/
+
+# Segredos
+.env
+*.key
+
+# SO / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

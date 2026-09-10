@@ -1,0 +1,17 @@
+{
+  "arquivo_origem": "ori_pqal.json",
+  "curadoria": {
+    "total_bruto": 1000,
+    "total_final": 1000
+  },
+  "distribuicao_labels": {
+    "yes": 552,
+    "no": 338,
+    "maybe": 110
+  },
+  "pii_substituida": {
+    "[URL]": 1,
+    "[DATE]": 10
+  },
+  "media_chars_contexto": 1379.4
+}
