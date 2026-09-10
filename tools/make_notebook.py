@@ -68,18 +68,43 @@ md("""
 ## 3. Instalar dependencias
 
 O Colab ja traz `torch` com CUDA, entao instalamos apenas a stack de fine-tuning.
-Se o Colab pedir para reiniciar a sessao, reinicie, execute novamente a celula
-do `%cd` acima e continue daqui.
+
+**A celula abaixo reinicia a sessao automaticamente ao final.** Isso e
+obrigatorio: o Colab vem com `transformers` 4.x ja carregado em memoria e,
+sem reiniciar, o upgrade para a 5.x gera erros do tipo
+`ModuleNotFoundError: No module named 'transformers.models.audioflamingo3'`.
+
+Depois do restart, **pule a celula 3 e continue a partir da celula 3.1**.
+A celula 2 (`%cd`) precisa ser reexecutada, pois o diretorio de trabalho
+volta para `/content`.
 """)
 code("""
 !pip install -q -r requirements-colab.txt
 
+print("Instalacao concluida. Reiniciando a sessao...")
+print("Apos o restart: rode a celula 2 (%cd) e siga da celula 3.1.")
+
+import IPython
+IPython.Application.instance().kernel.do_shutdown(True)
+""")
+
+md("""
+### 3.1 Verificar o ambiente apos o restart
+
+Execute esta celula antes de prosseguir. Se algum import falhar, rode a
+celula 3 novamente.
+""")
+code("""
 import torch, transformers, trl, peft, bitsandbytes
 print("torch       ", torch.__version__, "| cuda:", torch.cuda.is_available())
 print("transformers", transformers.__version__)
 print("trl         ", trl.__version__)
 print("peft        ", peft.__version__)
 print("bitsandbytes", bitsandbytes.__version__)
+
+assert torch.cuda.is_available(), (
+    "GPU nao ativa: Ambiente de execucao > Alterar o tipo > T4 GPU"
+)
 """)
 
 md("""
