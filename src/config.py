@@ -85,7 +85,9 @@ TRAINING_ARGS = {
     "gradient_accumulation_steps": 8,
     "learning_rate": 2e-4,
     "lr_scheduler_type": "cosine",
-    "warmup_ratio": 0.03,
+    # trl 1.x removeu warmup_ratio. ~150 steps totais (799/16 x 3 epocas),
+    # portanto 5 steps equivalem aos 3% de warmup pretendidos.
+    "warmup_steps": 5,
     "weight_decay": 0.01,
     "logging_steps": 10,
     "eval_strategy": "epoch",
