@@ -99,6 +99,10 @@ python -m src.finetuning.train --epochs 2 --max-seq-length 1024   # se houver OO
 | Otimizador | `paged_adamw_8bit`, LR 2e-4, scheduler cosine |
 | Épocas | 3 |
 
+Tempo medido na T4 do Colab: **~45 s/step, ~1h50 no total** (150 steps).
+QLoRA em T4 é lento devido à dequantização 4-bit somada ao gradient
+checkpointing e à ausência de suporte a bf16.
+
 A loss é calculada **apenas nos tokens da resposta** (`assistant_only_loss`);
 caso contrário o modelo aprenderia a reproduzir o abstract em vez de decidir
 o veredito.

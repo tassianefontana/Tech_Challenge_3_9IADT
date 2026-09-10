@@ -194,7 +194,12 @@ Hiperparametros em `src/config.py` (`LORA_CONFIG` e `TRAINING_ARGS`):
   resposta, nao no prompt. Sem isso o modelo aprende a reproduzir o abstract.
 - **3 epocas** com scheduler cosine e `paged_adamw_8bit`
 
-Tempo estimado na T4: ~25-40 min. Se ocorrer OOM, use `--max-seq-length 1024`.
+Tempo medido na T4: **~45 s/step, ~1h50 no total** (150 steps). A lentidao vem
+da combinacao dequantizacao 4-bit + gradient checkpointing + T4 sem suporte a
+bf16. Nao feche a aba: o Colab gratuito desconecta por inatividade.
+
+Se ocorrer OOM, use `--max-seq-length 1024`. Para encurtar o treino,
+`--epochs 2` (~1h15).
 """)
 code("""
 !python -m src.finetuning.train
@@ -240,6 +245,7 @@ Roda os 102 exemplos do test set nos dois modelos e compara:
 
 Leva ~10-15 min. Para um teste rapido use `--limit 20`.
 """)
+
 code("""
 !python -m src.finetuning.evaluate --batch-size 4
 """)
