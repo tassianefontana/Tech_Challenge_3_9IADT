@@ -13,6 +13,9 @@ __pycache__/
 # Dados brutos (baixados via script, nao versionar)
 data/raw/
 
+# Base SQLite (regenerada via src/db/patients.py a partir do seed versionado)
+data/patients.db
+
 # Bancos vetoriais (regenerados via src/rag/build_vectordb.py)
 chromadb/
 vectordb/

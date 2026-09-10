@@ -113,6 +113,17 @@ GENERATION_ARGS = {
 EVAL_RESULTS_FILE = DOCS_DIR / "evaluation_results.json"
 
 # --------------------------------------------------------------------
+# Base estruturada de pacientes (dados sinteticos)
+# --------------------------------------------------------------------
+PATIENTS_DB = DATA_DIR / "patients.db"
+PATIENTS_SEED_FILE = DATA_DIR / "patients_seed.json"
+
+# --------------------------------------------------------------------
+# Auditoria
+# --------------------------------------------------------------------
+AUDIT_LOG = LOGS_DIR / "audit.log"
+
+# --------------------------------------------------------------------
 # Prompt de instrucao usado no fine-tuning e na inferencia
 # --------------------------------------------------------------------
 SYSTEM_PROMPT = (

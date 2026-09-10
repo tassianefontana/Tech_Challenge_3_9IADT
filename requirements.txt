@@ -1,38 +1,21 @@
-# ============================================================
-# Tech Challenge Fase 3 - Assistente Medico
-# ============================================================
-# Ambiente LOCAL recomendado: Python 3.11 (nao use 3.13+, pois
-# torch/bitsandbytes ainda nao possuem wheels estaveis).
-# O fine-tuning (Etapa 3) roda no Google Colab, ver notebooks/.
-# ============================================================
+# Ambiente local (Python 3.12+). Versoes espelham o ambiente validado.
+# O fine-tuning roda no Google Colab, ver requirements-colab.txt.
 
-# --- Preprocessing / dados ---
-# (Etapa 2 usa apenas a biblioteca padrao do Python)
+# --- RAG / LangChain ---
+langchain==1.4.0
+langchain-core==1.6.2
+langchain-community==0.4.2
+langchain-huggingface==1.2.2
+langchain-chroma==1.1.0
+langgraph==1.2.11
+chromadb==1.5.9
+sentence-transformers==6.0.1
 
-# --- RAG / LangChain (Etapas 4 e 5) ---
-langchain==0.3.27
-langchain-core==0.3.78
-langchain-community==0.3.30
-langchain-huggingface==0.3.1
-langchain-chroma==0.2.6
-langgraph==0.6.8
-chromadb==1.1.1
-sentence-transformers==5.1.1
+# --- Modelo / inferencia ---
+transformers==5.17.0
+torch==2.14.0
+accelerate==1.15.0
+peft==0.20.0
 
-# --- Modelo / inferencia local ---
-transformers==4.57.0
-torch==2.8.0
-accelerate==1.10.1
-peft==0.17.1
-
-# --- Base estruturada de pacientes (Etapa 4) ---
-# sqlite3 faz parte da stdlib
-
-# --- Avaliacao (Etapa 3) ---
-evaluate==0.4.6
-rouge-score==0.1.2
-scikit-learn==1.7.2
-
-# --- Utilitarios ---
-python-dotenv==1.1.1
-tqdm==4.67.1
+# --- Avaliacao ---
+datasets==5.0.1

@@ -1,0 +1,844 @@
+[
+  {
+    "id": "PAC-0001",
+    "iniciais": "B.A.",
+    "idade": 33,
+    "sexo": "M",
+    "setor": "Enfermaria",
+    "data_internacao": "2025-05-31",
+    "diagnostico": "Diabetes mellitus tipo 2 descompensado",
+    "exames": [
+      {
+        "nome": "Hemoglobina glicada",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-06-01"
+      },
+      {
+        "nome": "Cetonemia",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-31"
+      },
+      {
+        "nome": "Funcao renal",
+        "status": "concluido",
+        "resultado": "alterado",
+        "solicitado_em": "2025-06-02"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Enoxaparina",
+        "posologia": "40 mg SC 1x/dia",
+        "ativo": 1
+      },
+      {
+        "nome": "Insulina regular",
+        "posologia": "conforme glicemia capilar",
+        "ativo": 1
+      },
+      {
+        "nome": "Furosemida",
+        "posologia": "20 mg IV 8/8h",
+        "ativo": 1
+      }
+    ],
+    "alergias": [
+      "Latex",
+      "Penicilina"
+    ]
+  },
+  {
+    "id": "PAC-0002",
+    "iniciais": "N.K.",
+    "idade": 45,
+    "sexo": "M",
+    "setor": "Enfermaria",
+    "data_internacao": "2025-05-29",
+    "diagnostico": "Acidente vascular cerebral isquemico",
+    "exames": [
+      {
+        "nome": "Tomografia de cranio",
+        "status": "concluido",
+        "resultado": "alterado",
+        "solicitado_em": "2025-05-31"
+      },
+      {
+        "nome": "Angio-TC",
+        "status": "concluido",
+        "resultado": "levemente alterado",
+        "solicitado_em": "2025-05-31"
+      },
+      {
+        "nome": "Glicemia",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-29"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Salbutamol",
+        "posologia": "inalatorio 6/6h",
+        "ativo": 1
+      }
+    ],
+    "alergias": [
+      "Penicilina"
+    ]
+  },
+  {
+    "id": "PAC-0003",
+    "iniciais": "J.U.",
+    "idade": 67,
+    "sexo": "F",
+    "setor": "Enfermaria",
+    "data_internacao": "2025-05-26",
+    "diagnostico": "Insuficiencia cardiaca descompensada",
+    "exames": [
+      {
+        "nome": "Ecocardiograma",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-27"
+      },
+      {
+        "nome": "BNP",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-05-28"
+      },
+      {
+        "nome": "Troponina",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-05-27"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Insulina regular",
+        "posologia": "conforme glicemia capilar",
+        "ativo": 1
+      }
+    ],
+    "alergias": [
+      "Penicilina",
+      "Latex"
+    ]
+  },
+  {
+    "id": "PAC-0004",
+    "iniciais": "V.I.",
+    "idade": 72,
+    "sexo": "M",
+    "setor": "Enfermaria",
+    "data_internacao": "2025-05-29",
+    "diagnostico": "Diabetes mellitus tipo 2 descompensado",
+    "exames": [
+      {
+        "nome": "Hemoglobina glicada",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-05-29"
+      },
+      {
+        "nome": "Cetonemia",
+        "status": "concluido",
+        "resultado": "levemente alterado",
+        "solicitado_em": "2025-05-30"
+      },
+      {
+        "nome": "Funcao renal",
+        "status": "concluido",
+        "resultado": "levemente alterado",
+        "solicitado_em": "2025-05-29"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Ceftriaxona",
+        "posologia": "1 g IV 12/12h",
+        "ativo": 1
+      },
+      {
+        "nome": "Omeprazol",
+        "posologia": "40 mg IV 1x/dia",
+        "ativo": 1
+      }
+    ],
+    "alergias": [
+      "Dipirona",
+      "Latex"
+    ]
+  },
+  {
+    "id": "PAC-0005",
+    "iniciais": "B.Z.",
+    "idade": 48,
+    "sexo": "F",
+    "setor": "Semi-intensiva",
+    "data_internacao": "2025-05-26",
+    "diagnostico": "Doenca pulmonar obstrutiva cronica exacerbada",
+    "exames": [
+      {
+        "nome": "Gasometria arterial",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-28"
+      },
+      {
+        "nome": "Espirometria",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-05-28"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Enoxaparina",
+        "posologia": "40 mg SC 1x/dia",
+        "ativo": 1
+      },
+      {
+        "nome": "Omeprazol",
+        "posologia": "40 mg IV 1x/dia",
+        "ativo": 1
+      }
+    ],
+    "alergias": []
+  },
+  {
+    "id": "PAC-0006",
+    "iniciais": "E.H.",
+    "idade": 75,
+    "sexo": "F",
+    "setor": "Pronto-socorro",
+    "data_internacao": "2025-05-18",
+    "diagnostico": "Pneumonia adquirida na comunidade",
+    "exames": [
+      {
+        "nome": "Radiografia de torax",
+        "status": "concluido",
+        "resultado": "alterado",
+        "solicitado_em": "2025-05-19"
+      },
+      {
+        "nome": "Hemocultura",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-19"
+      },
+      {
+        "nome": "PCR",
+        "status": "concluido",
+        "resultado": "alterado",
+        "solicitado_em": "2025-05-19"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Ceftriaxona",
+        "posologia": "1 g IV 12/12h",
+        "ativo": 1
+      }
+    ],
+    "alergias": [
+      "Sulfa",
+      "Iodo"
+    ]
+  },
+  {
+    "id": "PAC-0007",
+    "iniciais": "M.M.",
+    "idade": 66,
+    "sexo": "F",
+    "setor": "Semi-intensiva",
+    "data_internacao": "2025-05-30",
+    "diagnostico": "Pneumonia adquirida na comunidade",
+    "exames": [
+      {
+        "nome": "Radiografia de torax",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-05-30"
+      },
+      {
+        "nome": "Hemocultura",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-06-01"
+      },
+      {
+        "nome": "PCR",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-06-01"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Insulina regular",
+        "posologia": "conforme glicemia capilar",
+        "ativo": 1
+      },
+      {
+        "nome": "Enoxaparina",
+        "posologia": "40 mg SC 1x/dia",
+        "ativo": 1
+      }
+    ],
+    "alergias": [
+      "Penicilina",
+      "Latex"
+    ]
+  },
+  {
+    "id": "PAC-0008",
+    "iniciais": "Q.D.",
+    "idade": 83,
+    "sexo": "F",
+    "setor": "Enfermaria",
+    "data_internacao": "2025-05-18",
+    "diagnostico": "Diabetes mellitus tipo 2 descompensado",
+    "exames": [
+      {
+        "nome": "Hemoglobina glicada",
+        "status": "concluido",
+        "resultado": "levemente alterado",
+        "solicitado_em": "2025-05-20"
+      },
+      {
+        "nome": "Cetonemia",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-19"
+      },
+      {
+        "nome": "Funcao renal",
+        "status": "concluido",
+        "resultado": "levemente alterado",
+        "solicitado_em": "2025-05-18"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Salbutamol",
+        "posologia": "inalatorio 6/6h",
+        "ativo": 1
+      },
+      {
+        "nome": "Ceftriaxona",
+        "posologia": "1 g IV 12/12h",
+        "ativo": 1
+      },
+      {
+        "nome": "Omeprazol",
+        "posologia": "40 mg IV 1x/dia",
+        "ativo": 1
+      }
+    ],
+    "alergias": []
+  },
+  {
+    "id": "PAC-0009",
+    "iniciais": "H.S.",
+    "idade": 88,
+    "sexo": "M",
+    "setor": "UTI",
+    "data_internacao": "2025-05-20",
+    "diagnostico": "Sepse de foco urinario",
+    "exames": [
+      {
+        "nome": "Urocultura",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-22"
+      },
+      {
+        "nome": "Lactato serico",
+        "status": "concluido",
+        "resultado": "alterado",
+        "solicitado_em": "2025-05-21"
+      },
+      {
+        "nome": "Hemograma",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-05-21"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Omeprazol",
+        "posologia": "40 mg IV 1x/dia",
+        "ativo": 1
+      },
+      {
+        "nome": "Enoxaparina",
+        "posologia": "40 mg SC 1x/dia",
+        "ativo": 1
+      }
+    ],
+    "alergias": [
+      "Sulfa",
+      "Penicilina"
+    ]
+  },
+  {
+    "id": "PAC-0010",
+    "iniciais": "N.G.",
+    "idade": 87,
+    "sexo": "M",
+    "setor": "Semi-intensiva",
+    "data_internacao": "2025-05-24",
+    "diagnostico": "Ventilacao mecanica prolongada",
+    "exames": [
+      {
+        "nome": "Gasometria arterial",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-05-26"
+      },
+      {
+        "nome": "Radiografia de torax",
+        "status": "concluido",
+        "resultado": "alterado",
+        "solicitado_em": "2025-05-24"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Insulina regular",
+        "posologia": "conforme glicemia capilar",
+        "ativo": 1
+      },
+      {
+        "nome": "Salbutamol",
+        "posologia": "inalatorio 6/6h",
+        "ativo": 1
+      }
+    ],
+    "alergias": [
+      "Iodo"
+    ]
+  },
+  {
+    "id": "PAC-0011",
+    "iniciais": "R.H.",
+    "idade": 65,
+    "sexo": "M",
+    "setor": "UTI",
+    "data_internacao": "2025-05-18",
+    "diagnostico": "Doenca pulmonar obstrutiva cronica exacerbada",
+    "exames": [
+      {
+        "nome": "Gasometria arterial",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-05-18"
+      },
+      {
+        "nome": "Espirometria",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-19"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Insulina regular",
+        "posologia": "conforme glicemia capilar",
+        "ativo": 1
+      }
+    ],
+    "alergias": []
+  },
+  {
+    "id": "PAC-0012",
+    "iniciais": "E.X.",
+    "idade": 87,
+    "sexo": "F",
+    "setor": "Enfermaria",
+    "data_internacao": "2025-05-22",
+    "diagnostico": "Diabetes mellitus tipo 2 descompensado",
+    "exames": [
+      {
+        "nome": "Hemoglobina glicada",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-22"
+      },
+      {
+        "nome": "Cetonemia",
+        "status": "concluido",
+        "resultado": "levemente alterado",
+        "solicitado_em": "2025-05-22"
+      },
+      {
+        "nome": "Funcao renal",
+        "status": "concluido",
+        "resultado": "levemente alterado",
+        "solicitado_em": "2025-05-24"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Omeprazol",
+        "posologia": "40 mg IV 1x/dia",
+        "ativo": 1
+      },
+      {
+        "nome": "Insulina regular",
+        "posologia": "conforme glicemia capilar",
+        "ativo": 1
+      }
+    ],
+    "alergias": [
+      "Sulfa"
+    ]
+  },
+  {
+    "id": "PAC-0013",
+    "iniciais": "M.X.",
+    "idade": 49,
+    "sexo": "M",
+    "setor": "Enfermaria",
+    "data_internacao": "2025-05-31",
+    "diagnostico": "Pneumonia adquirida na comunidade",
+    "exames": [
+      {
+        "nome": "Radiografia de torax",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-06-01"
+      },
+      {
+        "nome": "Hemocultura",
+        "status": "concluido",
+        "resultado": "levemente alterado",
+        "solicitado_em": "2025-06-01"
+      },
+      {
+        "nome": "PCR",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-06-02"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Salbutamol",
+        "posologia": "inalatorio 6/6h",
+        "ativo": 1
+      },
+      {
+        "nome": "Enoxaparina",
+        "posologia": "40 mg SC 1x/dia",
+        "ativo": 1
+      },
+      {
+        "nome": "Insulina regular",
+        "posologia": "conforme glicemia capilar",
+        "ativo": 1
+      }
+    ],
+    "alergias": []
+  },
+  {
+    "id": "PAC-0014",
+    "iniciais": "C.Y.",
+    "idade": 82,
+    "sexo": "M",
+    "setor": "Enfermaria",
+    "data_internacao": "2025-05-24",
+    "diagnostico": "Pneumonia adquirida na comunidade",
+    "exames": [
+      {
+        "nome": "Radiografia de torax",
+        "status": "concluido",
+        "resultado": "levemente alterado",
+        "solicitado_em": "2025-05-24"
+      },
+      {
+        "nome": "Hemocultura",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-24"
+      },
+      {
+        "nome": "PCR",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-05-25"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Enoxaparina",
+        "posologia": "40 mg SC 1x/dia",
+        "ativo": 1
+      },
+      {
+        "nome": "Salbutamol",
+        "posologia": "inalatorio 6/6h",
+        "ativo": 1
+      },
+      {
+        "nome": "Insulina regular",
+        "posologia": "conforme glicemia capilar",
+        "ativo": 1
+      }
+    ],
+    "alergias": [
+      "Sulfa"
+    ]
+  },
+  {
+    "id": "PAC-0015",
+    "iniciais": "W.X.",
+    "idade": 78,
+    "sexo": "F",
+    "setor": "Enfermaria",
+    "data_internacao": "2025-05-29",
+    "diagnostico": "Doenca pulmonar obstrutiva cronica exacerbada",
+    "exames": [
+      {
+        "nome": "Gasometria arterial",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-05-29"
+      },
+      {
+        "nome": "Espirometria",
+        "status": "concluido",
+        "resultado": "levemente alterado",
+        "solicitado_em": "2025-05-30"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Ceftriaxona",
+        "posologia": "1 g IV 12/12h",
+        "ativo": 1
+      },
+      {
+        "nome": "Furosemida",
+        "posologia": "20 mg IV 8/8h",
+        "ativo": 1
+      }
+    ],
+    "alergias": []
+  },
+  {
+    "id": "PAC-0016",
+    "iniciais": "F.B.",
+    "idade": 89,
+    "sexo": "M",
+    "setor": "Enfermaria",
+    "data_internacao": "2025-05-29",
+    "diagnostico": "Sepse de foco urinario",
+    "exames": [
+      {
+        "nome": "Urocultura",
+        "status": "concluido",
+        "resultado": "alterado",
+        "solicitado_em": "2025-05-31"
+      },
+      {
+        "nome": "Lactato serico",
+        "status": "concluido",
+        "resultado": "alterado",
+        "solicitado_em": "2025-05-30"
+      },
+      {
+        "nome": "Hemograma",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-31"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Insulina regular",
+        "posologia": "conforme glicemia capilar",
+        "ativo": 1
+      },
+      {
+        "nome": "Salbutamol",
+        "posologia": "inalatorio 6/6h",
+        "ativo": 1
+      }
+    ],
+    "alergias": []
+  },
+  {
+    "id": "PAC-0017",
+    "iniciais": "C.N.",
+    "idade": 70,
+    "sexo": "F",
+    "setor": "Semi-intensiva",
+    "data_internacao": "2025-05-31",
+    "diagnostico": "Acidente vascular cerebral isquemico",
+    "exames": [
+      {
+        "nome": "Tomografia de cranio",
+        "status": "concluido",
+        "resultado": "dentro da normalidade",
+        "solicitado_em": "2025-06-01"
+      },
+      {
+        "nome": "Angio-TC",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-06-02"
+      },
+      {
+        "nome": "Glicemia",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-06-02"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Insulina regular",
+        "posologia": "conforme glicemia capilar",
+        "ativo": 1
+      }
+    ],
+    "alergias": []
+  },
+  {
+    "id": "PAC-0018",
+    "iniciais": "O.T.",
+    "idade": 64,
+    "sexo": "M",
+    "setor": "UTI",
+    "data_internacao": "2025-05-21",
+    "diagnostico": "Diabetes mellitus tipo 2 descompensado",
+    "exames": [
+      {
+        "nome": "Hemoglobina glicada",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-22"
+      },
+      {
+        "nome": "Cetonemia",
+        "status": "concluido",
+        "resultado": "alterado",
+        "solicitado_em": "2025-05-23"
+      },
+      {
+        "nome": "Funcao renal",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-22"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Enoxaparina",
+        "posologia": "40 mg SC 1x/dia",
+        "ativo": 1
+      }
+    ],
+    "alergias": [
+      "Dipirona",
+      "Iodo"
+    ]
+  },
+  {
+    "id": "PAC-0019",
+    "iniciais": "V.R.",
+    "idade": 47,
+    "sexo": "M",
+    "setor": "Enfermaria",
+    "data_internacao": "2025-05-18",
+    "diagnostico": "Pneumonia adquirida na comunidade",
+    "exames": [
+      {
+        "nome": "Radiografia de torax",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-18"
+      },
+      {
+        "nome": "Hemocultura",
+        "status": "concluido",
+        "resultado": "levemente alterado",
+        "solicitado_em": "2025-05-19"
+      },
+      {
+        "nome": "PCR",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-20"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Ceftriaxona",
+        "posologia": "1 g IV 12/12h",
+        "ativo": 1
+      },
+      {
+        "nome": "Insulina regular",
+        "posologia": "conforme glicemia capilar",
+        "ativo": 1
+      },
+      {
+        "nome": "Enoxaparina",
+        "posologia": "40 mg SC 1x/dia",
+        "ativo": 1
+      }
+    ],
+    "alergias": [
+      "Penicilina"
+    ]
+  },
+  {
+    "id": "PAC-0020",
+    "iniciais": "I.B.",
+    "idade": 33,
+    "sexo": "F",
+    "setor": "Semi-intensiva",
+    "data_internacao": "2025-05-21",
+    "diagnostico": "Insuficiencia cardiaca descompensada",
+    "exames": [
+      {
+        "nome": "Ecocardiograma",
+        "status": "concluido",
+        "resultado": "levemente alterado",
+        "solicitado_em": "2025-05-22"
+      },
+      {
+        "nome": "BNP",
+        "status": "concluido",
+        "resultado": "alterado",
+        "solicitado_em": "2025-05-22"
+      },
+      {
+        "nome": "Troponina",
+        "status": "pendente",
+        "resultado": null,
+        "solicitado_em": "2025-05-23"
+      }
+    ],
+    "medicacoes": [
+      {
+        "nome": "Insulina regular",
+        "posologia": "conforme glicemia capilar",
+        "ativo": 1
+      },
+      {
+        "nome": "Furosemida",
+        "posologia": "20 mg IV 8/8h",
+        "ativo": 1
+      }
+    ],
+    "alergias": []
+  }
+]
