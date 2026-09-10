@@ -154,6 +154,8 @@ python tools/make_notebook.py    # regenera o notebook do Colab
 
 ## Documentação
 
+- `docs/guia_do_projeto.md` — **guia didático**: explica cada arquivo e cada
+  etapa do zero, com glossário. Comece por aqui se o projeto é novo para você
 - `docs/relatorio_tecnico.md` — relatório técnico completo
 - `docs/evaluation_results.json` — métricas da avaliação
 - `data/processed/preprocessing_stats.json` — estatísticas de curadoria
