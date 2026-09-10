@@ -18,6 +18,17 @@ def code(src: str):
                   "outputs": [], "source": src.strip().splitlines(keepends=True)})
 
 
+# Reaplicado nas celulas que importam `src`. O %cd altera o diretorio de
+# trabalho, mas nao o sys.path: o kernel do Colab inicia em /content e e esse
+# caminho que fica registrado. Sem isto, `import src.config` falha.
+BOOTSTRAP = """import os, sys
+
+PROJECT_DIR = "/content/techchallenge3"
+os.chdir(PROJECT_DIR)
+if PROJECT_DIR not in sys.path:
+    sys.path.insert(0, PROJECT_DIR)"""
+
+
 md("""
 # Tech Challenge Fase 3 - Fine-tuning QLoRA (PubMedQA)
 
@@ -62,6 +73,11 @@ if not os.path.exists("/content/techchallenge3"):
 
 %cd /content/techchallenge3
 !git pull --ff-only
+
+# Registra o projeto no sys.path para os imports do notebook
+import sys
+if "/content/techchallenge3" not in sys.path:
+    sys.path.insert(0, "/content/techchallenge3")
 """)
 
 md("""
@@ -91,16 +107,21 @@ IPython.Application.instance().kernel.do_shutdown(True)
 md("""
 ### 3.1 Verificar o ambiente apos o restart
 
-Execute esta celula antes de prosseguir. Se algum import falhar, rode a
-celula 3 novamente.
+Execute esta celula antes de prosseguir. Ela restaura o diretorio de trabalho
+e o `sys.path` (perdidos no restart) e valida os imports.
 """)
-code("""
+code(BOOTSTRAP + """
+
 import torch, transformers, trl, peft, bitsandbytes
+print("cwd         ", os.getcwd())
 print("torch       ", torch.__version__, "| cuda:", torch.cuda.is_available())
 print("transformers", transformers.__version__)
 print("trl         ", trl.__version__)
 print("peft        ", peft.__version__)
 print("bitsandbytes", bitsandbytes.__version__)
+
+from src.config import BASE_LLM
+print("import src  OK -> modelo base:", BASE_LLM)
 
 assert torch.cuda.is_available(), (
     "GPU nao ativa: Ambiente de execucao > Alterar o tipo > T4 GPU"
@@ -114,7 +135,8 @@ Os arquivos `data/training/*.jsonl` ja vem versionados no repositorio.
 Para regenerar do zero (download -> anonimizacao -> curadoria -> split),
 descomente as tres primeiras linhas.
 """)
-code("""
+code(BOOTSTRAP + """
+
 # !python -m src.preprocessing.download_dataset
 # !python -m src.preprocessing.build_dataset
 # !python -m src.preprocessing.split_dataset
@@ -139,9 +161,11 @@ md("""
 Serve para escolher o `max_length` do treino. Sequencias acima do limite sao
 truncadas; muito acima do necessario so desperdicia memoria da GPU.
 """)
-code("""
+code(BOOTSTRAP + """
+
+import json
 from transformers import AutoTokenizer
-from src.config import BASE_LLM
+from src.config import BASE_LLM, TRAIN_FILE
 
 tok = AutoTokenizer.from_pretrained(BASE_LLM)
 
@@ -182,7 +206,9 @@ md("""
 Se a loss de validacao subir enquanto a de treino cai, ha overfitting -
 reduza para 2 epocas ou aumente o `lora_dropout`.
 """)
-code("""
+code(BOOTSTRAP + """
+
+import json
 import matplotlib.pyplot as plt
 from src.config import ADAPTER_DIR
 
@@ -219,7 +245,9 @@ code("""
 """)
 
 md("### 6.1 Matriz de confusao do modelo fine-tuned")
-code("""
+code(BOOTSTRAP + """
+
+import json
 from src.config import EVAL_RESULTS_FILE
 
 results = json.load(open(EVAL_RESULTS_FILE, encoding="utf-8"))
@@ -240,7 +268,8 @@ for name in ("base", "finetuned"):
 md("""
 ## 7. Teste manual com uma pergunta clinica
 """)
-code("""
+code(BOOTSTRAP + """
+
 import torch
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
@@ -289,7 +318,8 @@ O adaptador LoRA tem apenas ~30-70 MB (contra ~3 GB do modelo completo),
 por isso versionamos so ele. Baixe o `.zip` e descompacte em `models/`
 na sua maquina para rodar as Etapas 4 e 5 localmente.
 """)
-code("""
+code(BOOTSTRAP + """
+
 from src.config import ADAPTER_DIR
 
 # Remove checkpoints intermediarios para reduzir o tamanho
