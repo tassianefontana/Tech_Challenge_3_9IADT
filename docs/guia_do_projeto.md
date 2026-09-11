@@ -19,8 +19,11 @@ Se você quer só rodar o projeto, use o `README.md`. Este guia é para
 7. [Etapa 4 — Avaliação](#7-etapa-4)
 8. [Etapa 5 — RAG](#8-etapa-5)
 9. [Etapa 6 — Assistente com LangChain](#9-etapa-6)
-10. [O que ainda falta](#10-o-que-falta)
-11. [Glossário](#11-glossario)
+10. [Etapa 7 — Segurança: guardrails e auditoria](#10-etapa-7)
+11. [Etapa 8 — Fluxo automatizado com LangGraph](#11-etapa-8)
+12. [Etapa 9 — Interface de demonstração](#12-etapa-9)
+13. [O que ainda falta](#13-o-que-falta)
+14. [Glossário](#14-glossario)
 
 ---
 
@@ -832,34 +835,191 @@ de verdade — não basta o modelo afirmar que consultou uma fonte.
 
 ---
 
-<a name="10-o-que-falta"></a>
-## 10. O que ainda falta
+<a name="10-etapa-7"></a>
+## 10. Etapa 7 — Segurança: guardrails e auditoria
+
+### Por que o prompt não basta
+
+No `chain.py` as regras de segurança estão **dentro do prompt**. O problema
+é que prompt é só um pedido educado ao modelo. Três coisas podem furá-lo:
+
+- **Prompt injection**: o usuário escreve "ignore as instruções anteriores".
+- **Alucinação**: o modelo simplesmente esquece a regra.
+- **Deriva do fine-tuning**: o treino em PubMedQA reforçou o formato das
+  respostas, não as regras de segurança.
+
+Num sistema médico isso é inaceitável. A solução é validar **fora** do
+modelo, com código determinístico que o modelo não tem como contornar.
+
+### `src/security/guardrails.py`
+
+Duas fronteiras, uma na entrada e outra na saída.
+
+**Entrada** — `check_input(pergunta)`:
+
+| Verificação | O que faz |
+|---|---|
+| PII | Reaproveita o `anonymizer` da Etapa 2: nome, telefone, CPF, prontuário viram placeholders antes de chegar ao modelo |
+| Fora de escopo | Barra temas não clínicos e tentativas de sobrescrever as instruções |
+| Pedido de prescrição | Não bloqueia (o médico pode perguntar), mas marca para que a saída seja redigida |
+
+**Saída** — `check_output(resposta)`:
+
+| Verificação | O que faz |
+|---|---|
+| Dose | Regex de valor + unidade (`1 g`, `40 mg/kg`) → substitui por `[POSOLOGIA REMOVIDA]` |
+| Frequência | `12/12h`, `1x/dia`, `BID` → mesma redação |
+| Linguagem prescritiva | "prescreva", "administre", "inicie" → marca a resposta |
+| Citação | Se havia evidência e a resposta não cita PMID, sinaliza `sem_citacao` |
+| Disclaimer | Anexa o aviso de validação humana obrigatória |
+
+Na prática:
+
+```python
+>>> check_output("Prescreva ceftriaxona 1 g IV 12/12h.")
+"Prescreva ceftriaxona [POSOLOGIA REMOVIDA...] IV [POSOLOGIA REMOVIDA...]
+
+[AVISO] Conteudo de apoio a decisao clinica. Nao constitui prescricao..."
+violações: ['dose_na_saida', 'frequencia_na_saida',
+            'linguagem_prescritiva', 'sem_citacao']
+```
+
+O retorno é um `GuardrailResult` estruturado (`allowed`, `text`,
+`violations`, `requires_human_validation`), e não apenas texto: o fluxo
+LangGraph usa esses campos para decidir o caminho e emitir alertas.
+
+### `src/security/audit.py`
+
+Grava um **JSONL** em `logs/audit.log` — uma linha JSON por evento,
+append-only. Formato simples de propósito: dá para ler com `tail`, com
+`pandas` ou com qualquer ferramenta de log.
+
+O campo-chave é o **`trace_id`**: um identificador gerado no início do
+atendimento e repetido em todos os eventos daquela execução. Sem ele,
+o log vira uma sopa de linhas de atendimentos concorrentes; com ele, é
+possível reconstruir exatamente o que aconteceu em cada caso:
+
+```json
+{"timestamp": "...", "trace_id": "a1b2c3", "event": "input_recebido", ...}
+{"timestamp": "...", "trace_id": "a1b2c3", "event": "evidencia_recuperada",
+ "detail": {"pmids": ["21645374", "18456814"]}}
+{"timestamp": "...", "trace_id": "a1b2c3", "event": "guardrail_aplicado",
+ "detail": {"violacoes": ["sem_citacao"]}}
+```
+
+É isso que torna o sistema **auditável**: meses depois, é possível provar
+qual evidência sustentou cada resposta dada a cada paciente.
+
+---
+
+<a name="11-etapa-8"></a>
+## 11. Etapa 8 — Fluxo automatizado com LangGraph
+
+### Chain vs. Graph
+
+O `chain.py` é uma linha reta: pergunta → busca → LLM → resposta. Funciona,
+mas não sabe **decidir**. O enunciado pede outra coisa: "ao receber
+informações sobre um paciente, o sistema possa acionar diferentes etapas".
+
+O LangGraph modela isso como uma **máquina de estados**: nós (funções que
+recebem e atualizam um estado compartilhado) e arestas, que podem ser
+condicionais.
+
+### `src/workflow/graph.py`
+
+```
+triagem ─┬─(bloqueado)──────────────────────────────► END
+         └─► prontuário ─► verificar_exames ─┬─(pendentes)─► alerta_exames ─┐
+                                             └─(nenhum)───────────────────►┴─► buscar_evidência
+buscar_evidência ─► sugerir_conduta ─► guardrail ─► alertar_equipe ─► END
+```
+
+O estado (`AssistantState`) é um `TypedDict` que atravessa todos os nós.
+Cada nó recebe o estado e devolve **apenas os campos que alterou**; o
+LangGraph faz o merge.
+
+Os três pontos de decisão:
+
+1. **`triagem`** — se a pergunta é bloqueada, o fluxo vai direto para o
+   END. A LLM sequer é carregada: economia de recurso e risco.
+2. **`carregar_prontuario`** — paciente inexistente também encerra cedo.
+3. **`verificar_exames`** — se houver exame pendente, passa por
+   `alerta_exames` antes de seguir; senão, vai direto para a evidência.
+
+O nó `alertar_equipe` consolida os alertas por nível:
+
+| Nível | Quando |
+|---|---|
+| `crítico` | A resposta menciona substância à qual o paciente é alérgico |
+| `crítico` | O modelo tentou prescrever (posologia foi redigida) |
+| `atenção` | Exames pendentes, ou resposta sem citação de fonte |
+| `informativo` | Lembrete de validação humana (sempre presente) |
+
+O alerta de alergia é um bom exemplo de algo que **só** é possível cruzando
+a saída da LLM com a base estruturada — nenhum prompt garantiria isso.
+
+Cada nó grava um evento `no_executado` na auditoria, e o estado final traz
+`path`, a lista dos nós percorridos. É a prova de qual caminho o
+atendimento seguiu:
+
+```bash
+python -m src.workflow.graph --question "Qual a conduta?" --patient PAC-0001
+# caminho: triagem -> carregar_prontuario -> verificar_exames ->
+#          alerta_exames -> buscar_evidencia -> sugerir_conduta ->
+#          guardrail -> alertar_equipe
+```
+
+`--diagram` exporta o grafo em Mermaid para `docs/fluxo_langgraph.mmd`,
+que é o diagrama pedido no relatório — gerado a partir do código, não
+desenhado à mão (e portanto sempre fiel à implementação).
+
+---
+
+<a name="12-etapa-9"></a>
+## 12. Etapa 9 — Interface de demonstração
+
+### `src/app/ui.py`
+
+Streamlit, uma tela só, cobrindo os quatro itens exigidos no vídeo:
+funcionamento da LLM personalizada, execução do fluxo automatizado,
+resposta contextualizada e logs/validação.
+
+```bash
+streamlit run src/app/ui.py
+```
+
+A tela mostra, na ordem: o caminho percorrido no grafo, os alertas
+coloridos por nível, a resposta, os guardrails acionados, as fontes (cada
+PMID com link para o PubMed) e a trilha de auditoria daquele `trace_id`.
+
+Ponto de atenção: **sem GPU a inferência leva de 1 a 3 minutos por
+resposta**. Para a gravação, use `notebooks/assistente_demo_colab.ipynb`,
+que roda o mesmo código na GPU do Colab e publica a interface por um túnel
+temporário.
+
+---
+
+<a name="13-o-que-falta"></a>
+## 13. O que ainda falta
 
 | Etapa | Status |
 |---|---|
 | Estrutura do projeto | Concluída |
 | Preparação dos dados | Concluída |
-| Fine-tuning | Código pronto, **treino em execução no Colab** |
-| Avaliação | Código pronto, aguarda o adaptador |
+| Fine-tuning | Concluído (adaptador em `models/`) |
 | RAG | Concluída |
-| Assistente LangChain | Concluída (falta testar com o modelo treinado) |
-| **Fluxo LangGraph** (`src/workflow/`) | **A fazer** |
-| **Guardrails e auditoria** (`src/security/`) | **A fazer** |
+| Assistente LangChain | Concluída |
+| Guardrails e auditoria (`src/security/`) | Concluída |
+| Fluxo LangGraph (`src/workflow/`) | Concluída |
+| Interface Streamlit | Concluída |
+| **Avaliação base vs fine-tuned** | **Rodar `evaluate.py` no Colab** |
 | **Relatório técnico** (`docs/`) | **A fazer** |
 | **Vídeo de 15 min** | **A fazer** |
 
-O fluxo LangGraph terá nós como: triagem → buscar prontuário → verificar
-exames pendentes → buscar evidência → sugerir conduta → guardrail → alertar
-equipe, com desvio condicional quando houver exame pendente.
-
-Os guardrails farão a validação **programática** (hoje as regras existem só
-no prompt, e prompt pode ser contornado): bloquear dose/posologia na saída,
-filtrar PII na entrada e registrar tudo em log estruturado.
-
 ---
 
-<a name="11-glossario"></a>
-## 11. Glossário
+<a name="14-glossario"></a>
+## 14. Glossário
 
 | Termo | Significado |
 |---|---|
@@ -897,4 +1057,6 @@ filtrar PII na entrada e registrar tudo em log estruturado.
 | **Seed** | Número que torna sorteios reprodutíveis |
 | **Split** | Divisão dos dados em treino/validação/teste |
 | **Token** | Pedaço de palavra; unidade que a LLM processa |
+| **Trace id** | Identificador que liga todos os eventos de um atendimento |
+| **Prompt injection** | Texto do usuário que tenta anular as instruções do sistema |
 | **Vetor** | Lista de números que representa um texto |

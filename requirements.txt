@@ -19,3 +19,6 @@ peft==0.20.0
 
 # --- Avaliacao ---
 datasets==5.0.1
+
+# --- Interface de demonstracao ---
+streamlit==1.63.0

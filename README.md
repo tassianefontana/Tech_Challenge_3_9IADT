@@ -19,11 +19,12 @@ src/config.py      configuração central (paths, modelos, hiperparâmetros)
 src/preprocessing/ download, anonimização, curadoria e split
 src/finetuning/    treino QLoRA e avaliação base vs fine-tuned
 src/rag/           banco vetorial Chroma e retriever
-src/app/           pipeline LangChain
+src/app/           pipeline LangChain e interface Streamlit
+src/db/            base estruturada de pacientes (SQLite, dados sintéticos)
 src/workflow/      fluxo LangGraph
 src/security/      guardrails e logging de auditoria
-notebooks/         notebook de fine-tuning no Google Colab
-docs/              relatório técnico e resultados de avaliação
+notebooks/         notebooks do Colab (fine-tuning e demonstração)
+docs/              relatório técnico, diagrama do fluxo e resultados
 ```
 
 ---
@@ -139,10 +140,78 @@ que é devolvido junto à resposta para garantir **explainability**.
 
 ---
 
+## Etapa 5 — Assistente com LangChain
+
+Base estruturada de pacientes (dados **sintéticos**, seed fixa) e pipeline
+que combina LLM fine-tunada + evidência recuperada + prontuário:
+
+```bash
+python -m src.db.patients            # cria data/patients.db a partir do seed
+python -m src.db.patients --force    # recria do zero
+```
+
+```python
+from src.app.chain import ask
+
+r = ask("Há evidência de benefício da mobilização precoce?", patient_id="PAC-0001")
+print(r["answer"])      # resposta já validada pelos guardrails
+print(r["sources"])     # PMIDs + prontuário usados (explainability)
+print(r["trace_id"])    # correlaciona os eventos em logs/audit.log
+```
+
+---
+
+## Etapa 6 — Fluxo automatizado (LangGraph)
+
+O mesmo atendimento como máquina de estados, com desvio condicional,
+interrupção precoce e alertas para a equipe médica:
+
+```
+triagem ─┬─(bloqueado)──────────────────────────────► END
+         └─► prontuário ─► verificar_exames ─┬─(pendentes)─► alerta_exames ─┐
+                                             └─(nenhum)───────────────────►┴─► buscar_evidência
+buscar_evidência ─► sugerir_conduta ─► guardrail ─► alertar_equipe ─► END
+```
+
+```bash
+python -m src.workflow.graph --question "Qual a conduta indicada?" --patient PAC-0001
+python -m src.workflow.graph --diagram    # exporta docs/fluxo_langgraph.mmd
+```
+
+| Nó | Função |
+|---|---|
+| `triagem` | guardrail de entrada: sanitiza PII, barra prompt injection e temas fora de escopo |
+| `carregar_prontuario` | consulta a base estruturada do paciente |
+| `verificar_exames` | levanta exames pendentes — define o desvio condicional |
+| `alerta_exames` | sinaliza que a conduta foi sugerida com informação incompleta |
+| `buscar_evidencia` | recupera os trechos científicos no Chroma |
+| `sugerir_conduta` | gera a sugestão com a LLM customizada |
+| `guardrail` | valida a saída fora do modelo e anexa o aviso de validação humana |
+| `alertar_equipe` | consolida alertas (alergia, tentativa de prescrição, ausência de fonte) |
+
+---
+
+## Etapa 7 — Interface de demonstração
+
+```bash
+streamlit run src/app/ui.py
+```
+
+Mostra numa única tela o caminho percorrido no grafo, a resposta, os
+alertas, as fontes (PMID com link para o PubMed) e a trilha de auditoria
+da execução.
+
+Sem GPU local a inferência fica lenta (1–3 min por resposta em CPU). A
+alternativa é `notebooks/assistente_demo_colab.ipynb`, que roda o mesmo
+código na GPU do Colab e expõe a interface por um túnel temporário.
+
+---
+
 ## Utilitários
 
 ```bash
-python tools/make_notebook.py    # regenera o notebook do Colab
+python tools/make_notebook.py        # regenera o notebook de fine-tuning
+python tools/make_demo_notebook.py   # regenera o notebook de demonstração
 ```
 
 ---
@@ -150,9 +219,15 @@ python tools/make_notebook.py    # regenera o notebook do Colab
 ## Segurança e conformidade
 
 - Anonimização aplicada antes de qualquer treino ou indexação.
-- Guardrails bloqueiam prescrição direta de medicamento ou dosagem.
-- Toda interação é registrada em `logs/audit.log` (não versionado).
-- Respostas sempre acompanhadas da fonte (PMID) utilizada.
+- Guardrails **programáticos** (`src/security/guardrails.py`), fora do modelo:
+  o prompt sozinho é contornável. Na entrada, remove PII e barra tentativas de
+  sobrescrever as instruções; na saída, redige dose e posologia, detecta
+  linguagem prescritiva e exige citação de PMID.
+- Toda interação é registrada em `logs/audit.log` (JSONL, não versionado),
+  com `trace_id` correlacionando os eventos de uma mesma execução.
+- Respostas sempre acompanhadas da fonte (PMID) utilizada e do aviso de
+  validação humana obrigatória.
+
 
 ---
 

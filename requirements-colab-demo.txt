@@ -1,0 +1,13 @@
+# Dependencias do assistente (LangChain/LangGraph/RAG) no Google Colab.
+# Complementa requirements-colab.txt, que cobre a stack de fine-tuning.
+# O Colab ja traz torch com CUDA pre-instalado - NAO reinstale torch aqui.
+
+langchain==1.4.0
+langchain-core==1.6.2
+langchain-community==0.4.2
+langchain-huggingface==1.2.2
+langchain-chroma==1.1.0
+langgraph==1.2.11
+chromadb==1.5.9
+sentence-transformers==6.0.1
+streamlit==1.63.0

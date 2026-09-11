@@ -1,0 +1,31 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	triagem(triagem)
+	carregar_prontuario(carregar_prontuario)
+	verificar_exames(verificar_exames)
+	alerta_exames(alerta_exames)
+	buscar_evidencia(buscar_evidencia)
+	sugerir_conduta(sugerir_conduta)
+	guardrail(guardrail)
+	alertar_equipe(alertar_equipe)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> triagem;
+	alerta_exames --> buscar_evidencia;
+	buscar_evidencia --> sugerir_conduta;
+	carregar_prontuario -. &nbsp;bloqueado&nbsp; .-> __end__;
+	carregar_prontuario -. &nbsp;ok&nbsp; .-> verificar_exames;
+	guardrail --> alertar_equipe;
+	sugerir_conduta --> guardrail;
+	triagem -. &nbsp;bloqueado&nbsp; .-> __end__;
+	triagem -. &nbsp;ok&nbsp; .-> carregar_prontuario;
+	verificar_exames -. &nbsp;pendentes&nbsp; .-> alerta_exames;
+	verificar_exames -. &nbsp;nenhum&nbsp; .-> buscar_evidencia;
+	alertar_equipe --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc
