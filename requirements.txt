@@ -22,3 +22,6 @@ datasets==5.0.1
 
 # --- Interface de demonstracao ---
 streamlit==1.63.0
+
+# --- Testes ---
+pytest==9.1.1

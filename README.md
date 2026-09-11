@@ -207,6 +207,22 @@ código na GPU do Colab e expõe a interface por um túnel temporário.
 
 ---
 
+## Testes
+
+```bash
+pytest tests/ -q
+```
+
+39 testes cobrindo os guardrails (variações de dose, posologia, prompt
+injection, vazamento de PII, exigência de citação) e o fluxo LangGraph
+(cada caminho do grafo, alertas por severidade, isolamento entre
+`trace_id`, correspondência entre o diagrama e os nós implementados).
+
+A LLM e o retriever são substituídos por dublês: os testes verificam
+**roteamento e segurança** de forma determinística, sem depender de GPU.
+
+---
+
 ## Utilitários
 
 ```bash
