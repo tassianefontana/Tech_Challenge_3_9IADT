@@ -92,7 +92,12 @@ TRAINING_ARGS = {
     "logging_steps": 10,
     "eval_strategy": "epoch",
     "save_strategy": "epoch",
-    "save_total_limit": 2,
+    # Mantem as 3 epocas: com 799 exemplos o overfitting comeca cedo e o
+    # melhor checkpoint costuma nao ser o ultimo.
+    "save_total_limit": 3,
+    "load_best_model_at_end": True,
+    "metric_for_best_model": "eval_loss",
+    "greater_is_better": False,
     "optim": "paged_adamw_8bit",
     "max_grad_norm": 0.3,
     "seed": RANDOM_SEED,

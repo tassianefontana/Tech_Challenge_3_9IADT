@@ -320,6 +320,9 @@ print(ask(
 md("""
 ## 8. Exportar o adaptador
 
+> **Rode a celula 6 (avaliacao) antes desta.** A limpeza abaixo apaga os
+> checkpoints intermediarios; sem eles nao e possivel comparar as epocas.
+
 O adaptador LoRA tem apenas ~30-70 MB (contra ~3 GB do modelo completo),
 por isso versionamos so ele. Baixe o `.zip` e descompacte em `models/`
 na sua maquina para rodar as Etapas 4 e 5 localmente.
